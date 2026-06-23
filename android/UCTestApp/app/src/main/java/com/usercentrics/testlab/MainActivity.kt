@@ -23,8 +23,9 @@ import com.usercentrics.sdk.UsercentricsBanner
 import com.usercentrics.sdk.UsercentricsOptions
 import com.usercentrics.sdk.UsercentricsReadyStatus
 
-// Swap in a real Settings ID to load a live configuration.
-private const val SETTINGS_ID = "PLACEHOLDER_SETTINGS_ID"
+// Settings IDs — GDPR is active; switch to TCF by uncommenting it (and commenting GDPR).
+private const val SETTINGS_ID = "O7r4-zhZTP8NZ0"      // GDPR
+// private const val SETTINGS_ID = "_UMMPEZE0OG27J"   // TCF
 
 class MainActivity : ComponentActivity() {
 

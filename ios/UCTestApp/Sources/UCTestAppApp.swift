@@ -1,8 +1,9 @@
 import SwiftUI
 import Usercentrics
 
-// Swap in a real Settings ID to load a live configuration.
-let settingsID = "PLACEHOLDER_SETTINGS_ID"
+// Settings IDs — GDPR is active; switch to TCF by uncommenting it (and commenting GDPR).
+let settingsID = "O7r4-zhZTP8NZ0"      // GDPR
+// let settingsID = "_UMMPEZE0OG27J"   // TCF
 
 @main
 struct UCTestAppApp: App {
