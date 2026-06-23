@@ -30,11 +30,18 @@ If platform is missing, ask. If description is missing, ask.
    (anything the user already shared, else leave the comment).
 
 4. **Look up Jira tickets (Atlassian MCP).**
-   - `getAccessibleAtlassianResources` → get the `cloudId`.
-   - `getVisibleJiraProjects` (cloudId) → discover available projects (auto-discover, no hardcoded key).
-   - `searchJiraIssuesUsingJql` with JQL built from 2–4 strong keywords of the description, e.g.
-     `text ~ "banner" AND text ~ "consent" ORDER BY updated DESC` (cap ~10 results).
-   - Write matches into `{{TICKETS}}` as a list: `- [KEY](browse-url) — summary _(status)_`.
+   - `getAccessibleAtlassianResources` → get the `cloudId` (usercentrics = `2b67acf2-d0e2-4136-be8d-6b1d9838bfcf`).
+   - Do **not** call `getVisibleJiraProjects` with expand — its full dump overflows context. A JQL text
+     search already scopes to visible projects (auto-discovery). The **App SDK** project key is **MSDK**
+     (project name "App SDK"); `CTS` (Product Portal) holds customer support tickets. For SDK-specific
+     issues prefer `project in (MSDK, CTS) AND text ~ "..."`; widen to all projects if nothing matches.
+   - `searchJiraIssuesUsingJql` with JQL from 2–4 strong keywords, e.g.
+     `text ~ "banner" AND text ~ "consent" ORDER BY updated DESC`.
+     **Always pass `fields: ["summary","status","key"]` and `maxResults: 8`** — otherwise the response
+     overflows. If results are still large, save-to-file then `jq` out
+     `.issues.nodes[] | {key, summary: .fields.summary, status: .fields.status.name}`.
+   - Write matches into `{{TICKETS}}` as a list:
+     `- [KEY](https://usercentrics.atlassian.net/browse/KEY) — summary _(status)_`.
      If none found, write `No existing ticket found.`
    - On MCP error/timeout, write `Jira lookup unavailable — check manually.` and continue.
 
