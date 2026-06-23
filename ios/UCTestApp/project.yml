@@ -1,0 +1,33 @@
+name: UCTestApp
+options:
+  bundleIdPrefix: com.usercentrics.testlab
+  deploymentTarget:
+    iOS: "15.0"
+packages:
+  Usercentrics:
+    url: https://bitbucket.org/usercentricscode/usercentrics-spm-sdk
+    from: "2.27.1"
+  UsercentricsUI:
+    url: https://bitbucket.org/usercentricscode/usercentrics-spm-ui
+    from: "2.27.1"
+targets:
+  UCTestApp:
+    type: application
+    platform: iOS
+    sources:
+      - Sources
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.usercentrics.testlab
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        TARGETED_DEVICE_FAMILY: "1,2"
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        SWIFT_VERSION: "5.0"
+    dependencies:
+      - package: Usercentrics
+        product: Usercentrics
+      - package: UsercentricsUI
+        product: UsercentricsUI
