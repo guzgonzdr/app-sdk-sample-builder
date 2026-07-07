@@ -167,7 +167,9 @@ their IDE and runs it themselves. State that explicitly at the end.
 4. **Traceability.** Make sure the branch name, the changelog, and the ticket references all point
    at each other, so anyone landing on any one of them can find the rest.
 5. **Handoff.** End with: repo, base branch, new branch name, changelog path, and "Open in
-   Xcode/Android Studio and run — this skill does not launch an emulator or device."
+   Xcode/Android Studio and run — this skill does not launch an emulator or device." To put the sample on a
+   physical device (e.g. to show a customer), point to `references/run-on-android.md` (adb) or
+   `references/run-on-ios.md` (Xcode / TestFlight).
 
 ---
 
@@ -203,11 +205,22 @@ it.** Instead build a faithful web simulation of the banner and its layers.
    - **How it was recreated** (the behavior, described plainly).
    - **If it was a bug: how it could be solved.**
    - **Best practices** the customer can apply, grounded in the Document360 search from Step 3.
-3. **Deliver to Slack as a Canvas.** After confirmation, create a Slack Canvas (not a plain
+   - **See it on a real phone** (optional) — a short pointer to the real-device guide (step 4), so they know
+     the simulation can be verified on an actual device.
+3. **Offer a real-device guide (optional but encouraged).** The artifact is a *simulation*, not the real SDK.
+   When the requester wants to confirm the behavior on an actual phone, hand them the relevant walkthrough and
+   summarize it in the Canvas:
+   - Android → `references/run-on-android.md` (install via **adb**; a no-cable sideload path is included).
+   - iOS → `references/run-on-ios.md` (**Xcode + free Apple ID** for a one-off; **TestFlight** to share with
+     testers).
+   Be honest about the lift: Android is self-serve with a phone + cable; iOS needs a Mac (or TestFlight), so it
+   usually means pairing with a technical colleague. Say which applies.
+4. **Deliver to Slack as a Canvas.** After confirmation, create a Slack Canvas (not a plain
    message) with the document so it renders as a proper formatted doc with headings, and post it to
    the requester's own Slack. Confirm delivery (channel/DM + Canvas link) in your final message.
 
-The Canvas is the only lasting artifact in this mode; the simulation lives in the conversation.
+The Canvas (plus the real-device guide, if shared) is the lasting artifact in this mode; the simulation lives
+in the conversation.
 
 ---
 
