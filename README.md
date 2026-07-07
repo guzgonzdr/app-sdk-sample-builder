@@ -1,60 +1,67 @@
-# SDK Test Lab — Usercentrics App SDK
+# App SDK Sample Builder — Usercentrics App SDK
 
-A reproduction environment for **customer issues** on the Usercentrics **App SDKs** (iOS + Android).
-The `main` branch holds two pristine, minimal host apps. Every investigation branches off `main`,
-modifies the base app to reproduce the issue, and ships a structured report.
+A company-wide toolkit for building runnable **samples** of the Usercentrics App SDK from a plain-language
+description — an existing feature to showcase, a customer bug to reproduce, or a workaround to prove out.
+
+It bundles two things:
+- **Two pristine, minimal host apps** (iOS SwiftUI + Android Kotlin/Compose) that every sample branches from.
+- A **Claude skill** (`app-sdk-sample-builder`) that turns a description into a working sample and a traceable
+  record — adapting to the requester:
+  - **Technical** → a real GitHub branch with the sample code + an engineering changelog, handed off to open
+    in Xcode / Android Studio.
+  - **Non-technical** → an interactive banner simulation (rendered in a phone mockup, styled from the
+    account's real CMP config) plus a plain-language summary delivered to Slack. No GitHub, no IDE.
+
+Every sample shows the consent banner's **first layer** and lets you trigger the deeper layers (second layer,
+category toggles, vendor/TCF detail) **granularly**.
+
+## Getting started
+
+1. **Clone this repo** and work from it — Claude Code auto-loads the skill from `.claude/skills`:
+   ```bash
+   git clone https://github.com/guzgonzdr/app-sdk-sample-builder.git
+   cd app-sdk-sample-builder
+   ```
+2. **Grant the connectors** you'll use (Claude connector settings, or `claude mcp` / `/mcp`):
+   GitHub (technical mode), Slack (non-technical mode), Atlassian/Jira + Document360 (bug/workaround research).
+3. **Use it** — just describe what you want; the skill infers technical vs non-technical and confirms if
+   unclear. Nothing is hardcoded to one machine or account: the repo, Jira cloudId, and Settings ID are all
+   resolved at runtime. See [`.claude/skills/app-sdk-sample-builder/SKILL.md`](.claude/skills/app-sdk-sample-builder/SKILL.md)
+   and its [`references/sdk-quickref.md`](.claude/skills/app-sdk-sample-builder/references/sdk-quickref.md).
 
 ## Layout
 
 ```
-sdk-test-lab/
+app-sdk-sample-builder/
 ├── README.md
-├── .claude/skills/new-sdk-test/   # the /new-sdk-test workflow
-├── docs/REPORT_TEMPLATE.md        # report skeleton copied per test
-├── tests/<slug>/REPORT.md         # one report per investigation
-├── ios/UCTestApp/                 # SwiftUI host app (UsercentricsCore + UsercentricsUI, SPM)
-└── android/UCTestApp/             # Kotlin/Compose host app (com.usercentrics.sdk, Maven)
+├── .claude/skills/
+│   ├── app-sdk-sample-builder/   # this skill (SKILL.md + references/sdk-quickref.md)
+│   └── new-sdk-test/             # lighter reproduction-scaffolding workflow
+├── ios/UCTestApp/                # SwiftUI host app (UsercentricsCore + UsercentricsUI, SPM)
+└── android/UCTestApp/            # Kotlin/Compose host app (com.usercentrics.sdk, Maven)
 ```
 
-Both apps initialize the SDK with `PLACEHOLDER_SETTINGS_ID`. Swap in a real Settings ID
-(in `ContentView.swift` / `MainActivity.kt`, or per-test) to load a live configuration and render banners.
-
-SDK version pinned: **2.27.1** (both platforms).
-
-## Workflow
-
-1. From this folder, run the skill: `/new-sdk-test <ios|android|both> "<short issue description>"`.
-   It creates a branch `test/<date>-<slug>`, scaffolds `tests/<slug>/REPORT.md`, and looks up related
-   Jira tickets via the Atlassian MCP.
-2. Edit the base app on that branch to reproduce the issue.
-3. When done, the skill fills in problem / root cause / fix / changes in the report.
-
-The base apps on `main` always stay pristine — never edit them on `main`.
+Both apps initialize the SDK with a Settings ID (swap in a real one to load a live configuration and render
+banners). SDK version pinned: **2.27.1** (both platforms). The base apps on the base branch stay pristine —
+sample code goes on a new branch.
 
 ## Building / running
+
+Compile-check only; the skill never launches the app for you — open it in your IDE to run.
 
 ### Android
 ```bash
 cd android/UCTestApp
-JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home" ./gradlew :app:assembleDebug
-# install to a running emulator/device:
-JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home" ./gradlew :app:installDebug
+./gradlew :app:assembleDebug
 ```
-Notes: Gradle runs on Android Studio's bundled JBR 21 (the system Java 26 is too new for AGP).
-`local.properties` (gitignored) points at the Android SDK.
+If your system Java is too new for AGP, point `JAVA_HOME` at a compatible JDK (e.g. Android Studio's bundled
+JBR). `local.properties` (gitignored) points at the Android SDK.
 
 ### iOS
 ```bash
 cd ios/UCTestApp
-xcodegen generate    # regenerate the .xcodeproj from project.yml (run after adding/removing files)
-DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
-  xcodebuild -scheme UCTestApp -destination 'platform=iOS Simulator,name=iPhone 16 Pro' build
+xcodegen generate   # regenerate the .xcodeproj from project.yml (XcodeGen: brew install xcodegen)
+xcodebuild -scheme UCTestApp -destination 'platform=iOS Simulator,name=<a simulator>' build
 ```
-Notes: `DEVELOPER_DIR` points xcodebuild at the full Xcode (no `sudo xcode-select` needed).
-The `.xcodeproj` is generated by XcodeGen (`brew install xcodegen`) and is not committed; `project.yml` is the source of truth.
-
-## Toolchain
-- Xcode 26.x (`/Applications/Xcode.app`), iOS Simulator.
-- XcodeGen (`brew install xcodegen`).
-- Android SDK (`~/Library/Android/sdk`), Gradle wrapper 8.9, AGP 8.6, Kotlin 2.0.20.
-- Android Studio JBR 21 for Gradle.
+Set `DEVELOPER_DIR` to your Xcode if `xcodebuild` doesn't resolve it. `project.yml` is the source of truth;
+the `.xcodeproj` is generated and not committed.

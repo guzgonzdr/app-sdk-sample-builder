@@ -26,9 +26,11 @@ This skill is meant to be used company-wide, so it hardcodes nothing about one p
 It ships **inside the sample-apps repository** — cloning that repo gives you the base iOS/Android apps and
 this skill together. Set up once:
 
-1. **Clone the sample-apps repo** anywhere on your machine. It contains `android/UCTestApp`,
-   `ios/UCTestApp`, and this skill under `.claude/skills/app-sdk-sample-builder` — Claude Code loads the
-   skill automatically when you work from the clone. Pull latest before a session so the base apps are current.
+1. **Clone the sample-apps repo** anywhere on your machine — public:
+   `https://github.com/guzgonzdr/app-sdk-sample-builder` (`git@github.com:guzgonzdr/app-sdk-sample-builder.git`).
+   It contains `android/UCTestApp`, `ios/UCTestApp`, and this skill under
+   `.claude/skills/app-sdk-sample-builder` — Claude Code loads the skill automatically when you work from the
+   clone. Pull latest before a session so the base apps are current.
 2. **Grant the connectors you'll use** (via your Claude connector settings, or `claude mcp` / `/mcp` in an
    interactive session):
    - **GitHub** — required for technical mode (create branches, commit).
