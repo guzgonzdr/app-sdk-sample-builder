@@ -12,6 +12,8 @@ description: >-
   non-technical requesters get an interactive banner simulation rendered as an artifact plus a
   plain-language summary delivered to their Slack. The mode is inferred from the request and
   confirmed when unclear.
+tags:
+  - "hub:prague"
 ---
 
 # App SDK Sample Builder
